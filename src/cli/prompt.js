@@ -6,10 +6,7 @@ import { stdin as input, stdout as output } from 'node:process';
  * @returns {readline.Interface} Readline interface
  */
 export function createInterface() {
-  return readline.createInterface({
-    input,
-    output,
-  });
+  return readline.createInterface({ input, output });
 }
 
 /**

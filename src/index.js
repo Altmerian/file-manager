@@ -1,16 +1,9 @@
 import os from 'node:os';
-import { extractUsername, parseCommand, EXIT_COMMAND } from './cli/parser.js';
-import {
-  displayWelcome,
-  displayCurrentDirectory,
-  displayGoodbye,
-  createInterface
-} from './cli/prompt.js';
+import { extractUsername, parseCommand, EXIT_COMMAND, validateArgs } from './cli/parser.js';
+import { displayWelcome, displayCurrentDirectory, displayGoodbye, createInterface } from './cli/prompt.js';
 import { up, cd, ls } from './commands/navigation.js';
 
-const ERROR_MESSAGE = 'Operation failed with error:';
-const username = extractUsername();
-let currentDir = os.homedir();
+const ERROR_MESSAGE = 'Operation failed.';
 
 /**
  * Closure function to get or set the current working directory
@@ -46,12 +39,14 @@ async function startCLI({ username, commandRegistry, initialDir, currentDirFunct
       try {
         const { command, args } = parseCommand(line);
 
+        // Exit command
         if (command === EXIT_COMMAND) {
           displayGoodbye(username);
           rl.close();
           return;
         }
 
+        // If no command is provided, prompt again
         if (!command) {
           await rl.prompt();
           return;
@@ -100,6 +95,12 @@ const commandRegistry = {
   'cd': cd,
   'ls': ls,
 };
+
+validateArgs();
+
+const username = extractUsername();
+
+let currentDir = os.homedir();
 
 startCLI({
   username,

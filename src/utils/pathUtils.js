@@ -20,36 +20,15 @@ export function getCurrentDriveRoot(path) {
 }
 
 /**
- * Check if a path change would go above the root directory
- * @param {string} newPath - The path after navigation
- * @param {string} currentPath - The current directory
- * @returns {boolean} True if operation would go above root
- */
-export function wouldGoAboveRoot(newPath, currentPath) {
-  if (platform === 'win32') {
-    const newDrive = parse(newPath).root;
-    const currentDrive = parse(currentPath).root;
-
-    if (newDrive && newDrive !== currentDrive) {
-      return false; // Allow changing to a different drive
-    }
-    return currentPath === currentDrive;
-    
-  } else {
-    return currentPath === POSIX_ROOT;
-  }
-}
-
-/**
  * Resolve path relative to current directory, or absolute
  * @param {string} path - Path to resolve
  * @param {string} currentDir - Current working directory
  * @returns {string} Resolved path
  */
 export function resolvePath(path, currentDir) {
-  // Handle Windows drive switching (e.g., 'd:' or 'd:\')
+  // Handle Windows drive switching ('d:' or 'd:\')
   if (platform === 'win32' && /^[a-zA-Z]:(?:\\)?$/.test(path)) {
-    // If just a drive letter (e.g., 'd:'), append root slash
+    // If just a drive letter ('d:'), append root slash
     if (path.length === 2) {
       return `${path}\\`;
     }
