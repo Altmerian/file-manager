@@ -10,7 +10,7 @@ import { resolvePath, getCurrentDriveRoot, isDirectory } from '../utils/pathUtil
  */
 export async function up(args, getSetCurrentDir) {
   if (args.length > 0) {
-    throw new Error("The 'up' command does not accept arguments");
+    throw new Error("Invalid input: 'up' command does not accept arguments");
   }
   const currentDir = await getSetCurrentDir();
   if (getCurrentDriveRoot(currentDir) === currentDir) {
@@ -50,7 +50,7 @@ export async function cd(args, getSetCurrentDir) {
  */
 export async function ls(args, getSetCurrentDir) {
   if (args.length > 0) {
-    throw new Error("The 'ls' command does not accept arguments");
+    throw new Error("Invalid input: 'ls' command does not accept arguments");
   }
   const currentDir = await getSetCurrentDir();
   try {

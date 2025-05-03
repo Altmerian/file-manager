@@ -2,6 +2,7 @@ import os from 'node:os';
 import { extractUsername, parseCommand, EXIT_COMMAND, validateArgs } from './cli/parser.js';
 import { displayWelcome, displayCurrentDirectory, displayGoodbye, createInterface } from './cli/prompt.js';
 import { up, cd, ls } from './commands/navigation.js';
+import { cat, add, makeDirectory, renameFile, copyFile, moveFile, removeFile } from './commands/fileOps.js';
 
 const ERROR_MESSAGE = 'Operation failed.';
 
@@ -94,6 +95,15 @@ const commandRegistry = {
   'up': up,
   'cd': cd,
   'ls': ls,
+
+  // File operations
+  'cat': cat,
+  'add': add,
+  'mkdir': makeDirectory,
+  'rn': renameFile,
+  'cp': copyFile,
+  'mv': moveFile,
+  'rm': removeFile,
 };
 
 validateArgs();

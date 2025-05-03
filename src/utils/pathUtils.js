@@ -1,6 +1,6 @@
 import { isAbsolute, join, parse } from 'node:path';
 import { platform } from 'node:process';
-import { stat } from 'node:fs/promises';
+import { stat, access } from 'node:fs/promises';
 
 const POSIX_ROOT = '/';
 
@@ -52,7 +52,10 @@ export async function isDirectory(path) {
     const stats = await stat(path);
     return stats.isDirectory();
   } catch (error) {
-    return false;
+    if (error.code === 'ENOENT') {
+      return false;
+    }
+    throw error;
   }
 }
 
@@ -66,6 +69,28 @@ export async function isFile(path) {
     const stats = await stat(path);
     return stats.isFile();
   } catch (error) {
-    return false;
+    if (error.code === 'ENOENT') {
+      return false;
+    }
+    throw error;
+  }
+}
+
+
+/**
+ * Ensures that a given path does not already exist.
+ * Throws an error if the path exists or if an unexpected error occurs during check.
+ * @param {string} pathToCheck - The absolute path to check.
+ * @param {string} operationName - Name of the operation (e.g., 'rename', 'copy') for error messages.
+ * @returns {Promise<void>}
+ */
+export async function ensurePathDoesNotExist(pathToCheck, operationName = 'operation') {
+  try {
+    await access(pathToCheck);
+    throw new Error(`Cannot perform ${operationName}: target '${pathToCheck}' already exists.`);
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
   }
 }
