@@ -16,12 +16,6 @@ export function parseCommand(input) {
     return { command: EXIT_COMMAND, args: [] };
   }
 
-  // Special case for OS commands that use --parameter format
-  if (trimmedInput.startsWith('os --')) {
-    const parameter = trimmedInput.split('--')[1];
-    return { command: 'os', args: [`--${parameter}`] };
-  }
-
   // For all other commands, use regex to match arguments:
   // 1. Double quoted strings: "([^"]*)"
   // 2. Single quoted strings: '([^']*)'

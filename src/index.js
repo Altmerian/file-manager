@@ -3,6 +3,7 @@ import { extractUsername, parseCommand, EXIT_COMMAND, validateArgs } from './cli
 import { displayWelcome, displayCurrentDirectory, displayGoodbye, createInterface } from './cli/prompt.js';
 import { up, cd, ls } from './commands/navigation.js';
 import { cat, add, makeDirectory, renameFile, copyFile, moveFile, removeFile } from './commands/fileOps.js';
+import { osCommand } from './commands/osOps.js';
 
 const ERROR_MESSAGE = 'Operation failed.';
 
@@ -104,6 +105,9 @@ const commandRegistry = {
   'cp': copyFile,
   'mv': moveFile,
   'rm': removeFile,
+
+  // OS commands
+  'os': osCommand,
 };
 
 validateArgs();

@@ -56,7 +56,10 @@ export async function ls(args, getSetCurrentDir) {
   try {
     const entries = await readdir(currentDir, { withFileTypes: true });
     const sortedEntries = entries
-      .map(e => ({ Name: e.name, Type: e.isDirectory() ? 'directory' : 'file' }))
+      .map(e => ({
+        Name: e.name.length > 50 ? e.name.substring(0, 50) + '...' : e.name,
+        Type: e.isDirectory() ? 'directory' : 'file'
+      }))
       .sort((a, b) => a.Type.localeCompare(b.Type) || a.Name.localeCompare(b.Name));
 
     if (sortedEntries.length === 0) {
