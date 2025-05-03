@@ -150,37 +150,32 @@ export async function copyFile(args, getSetCurrentDir) {
  * @returns {Promise<void>}
  */
 export async function moveFile(args, getSetCurrentDir) {
-  // Validate arguments
-  if (args.length < 2) {
-    throw new Error('Both source file and destination directory are required');
+  if (args.length !== 2) {
+    throw new Error("Invalid input: 'mv' command expects exactly two arguments (path_to_file path_to_new_directory)");
   }
 
-  // Get current directory and resolve paths
   const currentDir = await getSetCurrentDir();
   const sourcePath = resolvePath(args[0], currentDir);
   const destDirPath = resolvePath(args[1], currentDir);
 
-  // Check if source file exists
   if (!(await isFile(sourcePath))) {
     throw new Error(`Source file does not exist or is not a file: ${sourcePath}`);
   }
-
-  // Check if destination directory exists
   if (!(await isDirectory(destDirPath))) {
-    throw new Error(`Destination directory does not exist or is not a directory: ${destDirPath}`);
+    throw new Error(`Destination directory does not exist or is not a directory: ${destDirPath}`); // Added path for clarity
   }
 
-  // Create destination file path (same filename in new directory)
-  const sourceFileName = sourcePath.split(/[/\\]/).pop();
+  const sourceFileName = sourcePath.split(/[\/\\]/).pop();
   const destFilePath = resolvePath(sourceFileName, destDirPath);
 
-  // Copy file using streams
+  await ensurePathDoesNotExist(destFilePath, 'move');
+
   try {
     await copyFileWithStreams(sourcePath, destFilePath);
-
-    // After successful copy, delete the source file
     await unlink(sourcePath);
+    console.log(`File '${sourcePath}' successfully moved to '${destFilePath}'`);
   } catch (error) {
+    await unlink(destFilePath); // Remove the destination file if unlink(sourcePath) fails
     throw new Error(`Failed to move file: ${error.message}`);
   }
 }
@@ -192,23 +187,20 @@ export async function moveFile(args, getSetCurrentDir) {
  * @returns {Promise<void>}
  */
 export async function removeFile(args, getSetCurrentDir) {
-  // Validate arguments
-  if (!args.length) {
-    throw new Error('File path required');
+  if (args.length !== 1) {
+    throw new Error("Invalid input: 'rm' command expects exactly one argument (path_to_file)");
   }
 
-  // Get current directory and resolve file path
   const currentDir = await getSetCurrentDir();
   const filePath = resolvePath(args[0], currentDir);
 
-  // Check if file exists
   if (!(await isFile(filePath))) {
-    throw new Error('Not a file or does not exist');
+    throw new Error(`Not a file or does not exist: ${filePath}`);
   }
 
-  // Delete file
   try {
     await unlink(filePath);
+    console.log(`File '${filePath}' successfully removed.`);
   } catch (error) {
     throw new Error(`Failed to delete file: ${error.message}`);
   }
