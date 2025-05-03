@@ -1,2 +1,0 @@
-Another file content.
-You can use this file to test the file operations.

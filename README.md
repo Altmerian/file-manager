@@ -22,6 +22,8 @@ npm run start -- --username=your_username
 
 ## Available Commands
 
+Use the following test file to test the application: [test.txt](test.txt)
+
 ### Navigation & Working Directory
 
 - Go up one directory:

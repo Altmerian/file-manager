@@ -5,6 +5,7 @@ import { up, cd, ls } from './commands/navigation.js';
 import { cat, add, makeDirectory, renameFile, copyFile, moveFile, removeFile } from './commands/fileOps.js';
 import { osCommand } from './commands/osOps.js';
 import { calculateHash } from './commands/hashOps.js';
+import { compress, decompress } from './commands/zipOps.js';
 
 const ERROR_MESSAGE = 'Operation failed.';
 
@@ -112,6 +113,10 @@ const commandRegistry = {
 
   // Hash commands
   'hash': calculateHash,
+
+  // Zip commands
+  'compress': compress,
+  'decompress': decompress,
 };
 
 validateArgs();
